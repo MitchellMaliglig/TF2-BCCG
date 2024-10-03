@@ -3,6 +3,14 @@ import 'dotenv/config';
 import express from 'express';
 import pg from 'pg';
 import { ClientError, errorMiddleware } from './lib/index.js';
+import argon2 from 'argon2';
+import jwt from 'jsonwebtoken';
+import { error } from 'console';
+
+type Auth = {
+  username: string;
+  password: string;
+};
 
 const db = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
@@ -10,6 +18,9 @@ const db = new pg.Pool({
     rejectUnauthorized: false,
   },
 });
+
+const hashKey = process.env.TOKEN_SECRET;
+if (!hashKey) throw new Error('TOKEN_SECRET not found in .env');
 
 const app = express();
 
@@ -24,6 +35,55 @@ app.use(express.json());
 
 app.get('/api/hello', (req, res) => {
   res.json({ message: 'Hello, World!' });
+});
+
+app.post('/api/auth/sign-up', async (req, res, next) => {
+  try {
+    const { username, password } = req.body;
+    if (!username || !password)
+      throw new ClientError(400, 'username and password are required fields');
+    const hashedPassword = await argon2.hash(password);
+    const sql = `
+      INSERT INTO "users" ("username", "hashedPassword")
+      VALUES ($1, $2)
+      RETURNING *;
+    `;
+    const params = [username, hashedPassword];
+    const result = await db.query(sql, params);
+    const [newUser] = result.rows;
+    res.status(201).json(newUser);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.post('/api/auth/log-in', async (req, res, next) => {
+  try {
+    const { username, password } = req.body as Partial<Auth>;
+    if (!username || !password) throw new ClientError(401, 'invalid login');
+    const sql = `
+      SELECT "userId", "hashedPassword"
+      FROM "users"
+      WHERE "username" = $1;
+    `;
+    const params = [username];
+    const result = await db.query(sql, params);
+    const [user] = result.rows;
+    if (!user) throw new ClientError(401, 'user not found');
+    if (!(await argon2.verify(user.hashedPassword, password)))
+      throw new ClientError(401, 'incorrect password');
+    const payload = {
+      userId: user.userId,
+      username,
+    };
+    const signedToken = jwt.sign(payload, hashKey);
+    res.status(200).json({
+      user: payload,
+      token: signedToken,
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
 /*
