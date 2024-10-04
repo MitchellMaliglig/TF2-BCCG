@@ -5,7 +5,6 @@ import pg from 'pg';
 import { ClientError, errorMiddleware } from './lib/index.js';
 import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
-import { error } from 'console';
 
 type Auth = {
   username: string;

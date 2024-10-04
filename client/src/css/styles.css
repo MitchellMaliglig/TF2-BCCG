@@ -1,0 +1,38 @@
+body {
+  background-color: rgb(246, 246, 246);
+}
+
+header {
+  background-color: rgb(255, 127, 39);
+}
+
+h1,
+nav {
+  color: white;
+}
+
+h1,
+h2 {
+  border-bottom: 0.5rem solid black;
+}
+
+#not-found {
+  color: black;
+}
+
+h1,
+h2,
+p {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+#dont-have-acc {
+  color: blue;
+  border-bottom: 0.2rem solid blue;
+  display: inline;
+}
+
+nav > h2:hover,
+#dont-have-acc:hover {
+  cursor: pointer;
+}
