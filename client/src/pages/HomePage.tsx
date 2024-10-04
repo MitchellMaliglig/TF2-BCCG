@@ -1,7 +1,7 @@
 export function HomePage() {
   return (
     <>
-      <h2>Home Page</h2>
+      <h2 className="page-heading">Home Page</h2>
       <div className="row">
         <div className="column-half">
           <img src="/Cattius.png" />

@@ -1,18 +1,23 @@
+* {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
 body {
   background-color: rgb(246, 246, 246);
 }
 
-header {
+header,
+button {
   background-color: rgb(255, 127, 39);
 }
 
 h1,
-nav {
+nav,
+button {
   color: white;
 }
 
-h1,
-h2 {
+.page-heading {
   border-bottom: 0.5rem solid black;
 }
 
@@ -20,10 +25,10 @@ h2 {
   color: black;
 }
 
-h1,
-h2,
-p {
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+button {
+  border-color: rgb(255, 127, 39);
+  padding: 1rem;
+  border-radius: 0.5rem;
 }
 
 #dont-have-acc {

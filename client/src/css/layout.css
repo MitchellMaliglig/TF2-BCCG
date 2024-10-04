@@ -50,6 +50,7 @@ nav {
   display: flex;
   align-items: center;
   gap: 1rem;
+  width: 75%;
 }
 
 nav > :nth-child(3) {
@@ -59,3 +60,26 @@ nav > :nth-child(3) {
 img {
   width: 75%;
 }
+
+form {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  /* width: 50%; */
+}
+
+label {
+  text-align: center;
+}
+
+label,
+input {
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+/* button,
+#dont-have-acc{
+  margin-left: auto;
+} */

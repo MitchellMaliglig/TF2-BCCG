@@ -1,3 +1,3 @@
 export function EntriesPage() {
-  return <h2>Entries Page</h2>;
+  return <h2 className="page-heading">Entries Page</h2>;
 }

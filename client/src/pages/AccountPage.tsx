@@ -57,30 +57,28 @@ export function AccountPage({ pageType }: accountPageProps) {
 
   return (
     <>
-      <h2>{pageType} Page</h2>
+      <h2 className="page-heading">{pageType} Page</h2>
       <form onSubmit={handleSubmit}>
-        <label>
-          {' '}
-          Username
+        <div className="row">
+          <label>Username</label>
           <input type="text" name="username" required></input>
-        </label>
-        <label>
-          {' '}
-          Password
+        </div>
+        <div className="row">
+          <label>Password</label>
           <input type="password" name="password" required></input>
-        </label>
+        </div>
         <button disabled={isLoading}>{pageType}</button>
+        {pageType === 'Log In' && (
+          /*
+            the "/" in navigate() is required to
+            navigate to "/sign-up" instead of
+            "/log-in/sign-up"
+          */
+          <p id="dont-have-acc" onClick={() => navigate('/sign-up')}>
+            Don't have an account? Click here to create one.
+          </p>
+        )}
       </form>
-      {pageType === 'Log In' && (
-        /*
-          the "/" in navigate() is required to
-          navigate to "/sign-up" instead of
-          "/log-in/sign-up"
-        */
-        <p id="dont-have-acc" onClick={() => navigate('/sign-up')}>
-          Don't have an account? Click here to create one.
-        </p>
-      )}
     </>
   );
 }
