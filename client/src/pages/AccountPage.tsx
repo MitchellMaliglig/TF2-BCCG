@@ -60,12 +60,24 @@ export function AccountPage({ pageType }: accountPageProps) {
       <h2 className="page-heading">{pageType} Page</h2>
       <form onSubmit={handleSubmit}>
         <div className="row">
-          <label>Username</label>
-          <input type="text" name="username" required></input>
+          <label htmlFor="username">Username</label>
+          <input
+            type="text"
+            name="username"
+            id="username"
+            autoComplete="username"
+            required
+          />
         </div>
         <div className="row">
-          <label>Password</label>
-          <input type="password" name="password" required></input>
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            name="password"
+            id="password"
+            autoComplete="off"
+            required
+          />
         </div>
         <button disabled={isLoading}>{pageType}</button>
         {pageType === 'Log In' && (
