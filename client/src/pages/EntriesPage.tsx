@@ -6,7 +6,6 @@ export function EntriesPage() {
   const [entries, setEntries] = useState<Entry[]>([]);
   //const [isLoading, setIsLoading] = useState(true);
   const { user } = useUser();
-  console.log('hi');
 
   useEffect(() => {
     async function fetchEntries() {
