@@ -20,6 +20,16 @@
   /* margin: 0.5rem 0; */
 }
 
+#entry-button {
+  display: flex;
+  margin-left: auto;
+}
+
+.entry-card {
+  margin-bottom: 1rem;
+  flex-direction: column-reverse;
+}
+
 /* min-width: 768px */
 @media screen and (width >=768px) {
   .container {
@@ -33,6 +43,10 @@
 
   .column-half {
     width: 50%;
+  }
+
+  .entry-card {
+    flex-direction: row;
   }
 }
 
@@ -65,8 +79,6 @@ form {
   display: flex;
   align-items: center;
   flex-direction: column;
-
-  /* width: 50%; */
 }
 
 label {
@@ -79,7 +91,17 @@ input {
   margin-bottom: 0.5rem;
 }
 
-/* button,
-#dont-have-acc{
-  margin-left: auto;
-} */
+.blue-box,
+.red-box,
+.text-box {
+  margin: 1rem;
+}
+
+ul {
+  padding: 0;
+}
+
+.icon {
+  margin-left: 2rem;
+  float: right;
+}

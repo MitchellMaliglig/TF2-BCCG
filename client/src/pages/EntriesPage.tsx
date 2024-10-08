@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Entry, readEntries } from '../lib/data';
 import { useUser } from '../components/useUser';
+import { EntryCard } from '../components/EntryCard';
 
 export function EntriesPage() {
   const [entries, setEntries] = useState<Entry[]>([]);
-  //const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const { user } = useUser();
 
   useEffect(() => {
@@ -13,22 +14,32 @@ export function EntriesPage() {
         setEntries(await readEntries());
       } catch (err) {
         throw new Error(`Error: ${err}`);
+      } finally {
+        setIsLoading(false);
       }
     }
     if (user) fetchEntries();
+    else setIsLoading(false);
   }, [user]);
 
   return (
     <>
       <h2 className="page-heading">Entries Page</h2>
-      {!user && <p>Please log in to create / view entries</p>}
-      {entries.map((e) => (
-        <div key={e.entryId}>
-          <p>{e.title}</p>
-          <p>{e.description}</p>
-          <p>{e.commands}</p>
-        </div>
-      ))}
+      <button id="entry-button">New</button>
+      {isLoading && <p>Loading...</p>}
+      {!isLoading && (
+        <>
+          {!user && <p>Please log in to create / view entries.</p>}
+          {user && entries.length === 0 && (
+            <p>No entries found. Please click "new" to get started.</p>
+          )}
+          <ul id="entries-list">
+            {entries.map((e) => (
+              <EntryCard entry={e} key={e.entryId} />
+            ))}
+          </ul>
+        </>
+      )}
     </>
   );
 }

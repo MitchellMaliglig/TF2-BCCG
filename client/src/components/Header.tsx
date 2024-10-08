@@ -8,7 +8,7 @@ export function Header() {
   return (
     <>
       <header>
-        <div className="container row column-full">
+        <div className="container row">
           <h1>TF2-BCCG</h1>
           <nav>
             <h2 onClick={() => navigate('/')}>Home</h2>
