@@ -2,7 +2,7 @@
 import 'dotenv/config';
 import express from 'express';
 import pg from 'pg';
-import { ClientError, errorMiddleware } from './lib/index.js';
+import { ClientError, authMiddleware, errorMiddleware } from './lib/index.js';
 import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
 
@@ -80,6 +80,19 @@ app.post('/api/auth/log-in', async (req, res, next) => {
       user: payload,
       token: signedToken,
     });
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.get('/api/entries', authMiddleware, async (req, res, next) => {
+  try {
+    const sql = `
+      SELECT * FROM "entries"
+      WHERE "userId" = $1;
+    `;
+    const result = await db.query(sql, [req.user?.userId]);
+    res.json(result.rows);
   } catch (err) {
     next(err);
   }
