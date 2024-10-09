@@ -30,7 +30,11 @@ export function EntriesPage() {
         navigate to "/create-entry" instead of
         "/entries/create-entry"
       */}
-      <button id="entry-button" onClick={() => navigate('/create-entry')}>
+      <button
+        id="entry-button"
+        onClick={() => {
+          if (user) navigate('/create-entry');
+        }}>
         New
       </button>
       {isLoading && <p>Loading...</p>}
