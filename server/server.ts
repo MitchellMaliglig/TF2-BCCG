@@ -98,6 +98,26 @@ app.get('/api/entries', authMiddleware, async (req, res, next) => {
   }
 });
 
+app.post('/api/entries', authMiddleware, async (req, res, next) => {
+  try {
+    const { title, description, commands } = req.body;
+    if (!title || !description || !commands)
+      throw new ClientError(400, 'title, description & commands required');
+    const sql = `
+      INSERT INTO "entries" ("userId", "title", "description", "commands")
+      VALUES ($1, $2, $3, $4)
+      RETURNING *;
+    `;
+    const params = [req.user?.userId, title, description, commands];
+    const result = await db.query(sql, params);
+    const [entry] = result.rows;
+    res.status(201).json(entry);
+  } catch (err) {
+    console.error('the error', err);
+    next(err);
+  }
+});
+
 /*
  * Handles paths that aren't handled by any other route handler.
  * It responds with `index.html` to support page refreshes with React Router.
