@@ -113,7 +113,6 @@ app.post('/api/entries', authMiddleware, async (req, res, next) => {
     const [entry] = result.rows;
     res.status(201).json(entry);
   } catch (err) {
-    console.error('the error', err);
     next(err);
   }
 });

@@ -1,6 +1,7 @@
-import React, { FormEvent } from 'react';
+import React, { FormEvent, useState } from 'react';
 //import { saveEntry } from '../lib/data';
 import { useNavigate } from 'react-router-dom';
+import { EntryForm } from '../components/EntryForm';
 
 /*
   pageType can be "Create Entry" or "???"
@@ -11,22 +12,26 @@ type entryPageProps = {
 
 export function EntryPage({ pageType }: entryPageProps) {
   const navigate = useNavigate();
-  const classes = [
-    'scout',
-    'soldier',
-    'pyro',
-    'demoman',
-    'heavyweapons',
-    'engineer',
-    'medic',
-    'sniper',
-    'spy',
-  ];
-  const teams = ['blue', 'red'];
-  const difficulties = ['easy', 'normal', 'hard', 'expert'];
+  const [commands, setCommands] = useState([] as string[]);
+  const entryOptions = {
+    classes: [
+      'scout',
+      'soldier',
+      'pyro',
+      'demoman',
+      'heavyweapons',
+      'engineer',
+      'medic',
+      'sniper',
+      'spy',
+    ],
+    teams: ['blue', 'red'],
+    difficulties: ['easy', 'normal', 'hard', 'expert'],
+  };
 
   async function handleSave(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    console.log(commands);
     // const newEntry = {
     //   title: 'title',
     //   description: 'description',
@@ -51,45 +56,19 @@ export function EntryPage({ pageType }: entryPageProps) {
   function handleAddCommand(event: React.MouseEvent<HTMLButtonElement>) {
     const formData = new FormData(event.currentTarget.form!);
     const commandData = Object.fromEntries(formData);
-    const command = `tf_bot_add ${commandData.count} ${commandData.class} ${commandData.team} ${commandData.difficulty};`;
-    console.log(command);
+    const command = `tf_bot_add ${commandData.count} ${commandData.class} ${commandData.team} ${commandData.difficulty}`;
+    setCommands((c) => [...c, command]);
   }
 
   return (
     <>
       <h2 className="page-heading">{pageType} Page</h2>
-      <form onSubmit={handleSave}>
-        <label htmlFor="count">Count</label>
-        <input type="number" id="count" name="count" defaultValue={1} min={1} />
-        <label htmlFor="class">Class</label>
-        <select id="class" name="class">
-          {classes.map((c, i) => (
-            <option value={c} key={i}>
-              {c}
-            </option>
-          ))}
-        </select>
-        <label htmlFor="team">Team</label>
-        <select id="team" name="team">
-          {teams.map((t, i) => (
-            <option value={t} key={i}>
-              {t}
-            </option>
-          ))}
-        </select>
-        <label htmlFor="difficulty">Difficulty</label>
-        <select id="difficulty" name="difficulty">
-          {difficulties.map((d, i) => (
-            <option value={d} key={i}>
-              {d}
-            </option>
-          ))}
-        </select>
-        <button type="button" onClick={handleAddCommand}>
-          Add command
-        </button>
-        <button type="submit">Save</button>
-      </form>
+      <EntryForm
+        onSave={handleSave}
+        onAddCommand={handleAddCommand}
+        entryOptions={entryOptions}
+        commands={commands}
+      />
     </>
   );
 }

@@ -2,6 +2,7 @@ import { Entry } from '../lib/data';
 import { faPencilAlt, faCopy } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRef, useState } from 'react';
+import { TeamBoxes } from './TeamBoxes';
 
 type entryCardProps = {
   entry: Entry;
@@ -13,18 +14,6 @@ export function EntryCard({ entry }: entryCardProps) {
 
   // the last value of commands[] is an empty string ""
   const commands = entry.commands.split(';');
-  const teams = {
-    blue: [] as string[],
-    red: [] as string[],
-  };
-
-  for (let i = 0; i < commands.length - 1; i++) {
-    if (commands[i].includes('blue')) {
-      teams.blue.push(commands[i]);
-    } else if (commands[i].includes('red')) {
-      teams.red.push(commands[i]);
-    }
-  }
 
   async function handleCopy() {
     let text =
@@ -47,20 +36,7 @@ export function EntryCard({ entry }: entryCardProps) {
   return (
     <li className="entry-card row">
       <div className="column-half">
-        {teams.blue.length > 0 && (
-          <ul className="blue-box">
-            {teams.blue.map((b, i) => (
-              <li key={i}>{b}</li>
-            ))}
-          </ul>
-        )}
-        {teams.red.length > 0 && (
-          <ul className="red-box">
-            {teams.red.map((r, i) => (
-              <li key={i}>{r}</li>
-            ))}
-          </ul>
-        )}
+        <TeamBoxes commands={commands} />
       </div>
       <div className="column-half">
         <h3 className="text-box">
