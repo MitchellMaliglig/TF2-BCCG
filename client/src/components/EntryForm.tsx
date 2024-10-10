@@ -1,8 +1,9 @@
-import { FormEvent } from 'react';
+import { useState } from 'react';
 import { TeamBoxes } from './TeamBoxes';
+import { Modal } from './Modal';
 
 type entryFormProps = {
-  onSave: (event: FormEvent<HTMLFormElement>) => void;
+  onSave: (entryTitle: string, entryDescription: string) => void;
   onAddCommand: (event: React.MouseEvent<HTMLButtonElement>) => void;
   entryOptions: {
     classes: string[];
@@ -18,8 +19,37 @@ export function EntryForm({
   entryOptions,
   commands,
 }: entryFormProps) {
+  const [isOpen, setOpen] = useState(false);
+  const [isCommandsEmpty, setCommandsEmpty] = useState(false);
+  const [isTitleBlank, setTitleBlank] = useState(false);
+  const [isDescriptionBlank, setDescriptionBlank] = useState(false);
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+
+  function handleOpen() {
+    setCommandsEmpty(false);
+    setOpen(true);
+  }
+
+  function handleCancel() {
+    setOpen(false);
+  }
+
+  function handleSave() {
+    if (commands.length === 0) {
+      setCommandsEmpty(true);
+    } else if (title.length === 0) {
+      setTitleBlank(true);
+    } else if (description.length === 0) {
+      setTitleBlank(false);
+      setDescriptionBlank(true);
+    } else {
+      onSave(title, description);
+    }
+  }
+
   return (
-    <form onSubmit={onSave} id="entry-form">
+    <form id="entry-form">
       <div className="row">
         <label htmlFor="count">
           Count
@@ -68,7 +98,47 @@ export function EntryForm({
         Add command
       </button>
       <TeamBoxes commands={commands} />
-      <button type="submit">Save</button>
+      <button type="button" onClick={handleOpen}>
+        Save
+      </button>
+      <Modal isOpen={isOpen} onClose={handleCancel}>
+        <h3>Would you like to save?</h3>
+        <div className="row">
+          <label htmlFor="title">Title</label>
+          <input
+            name="title"
+            id="title"
+            required
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+        </div>
+        <div className="row">
+          <label htmlFor="description">Description</label>
+          <input
+            name="description"
+            id="description"
+            required
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+        </div>
+        {isCommandsEmpty && (
+          <p id="no-entries">You ain't saving nothin', lad!</p>
+        )}
+        {isTitleBlank && <p id="no-title">There's no title, lad!</p>}
+        {isDescriptionBlank && (
+          <p id="no-description">There's no description, lad!</p>
+        )}
+        <div className="row">
+          <button type="button" id="entry-no" onClick={handleCancel}>
+            No
+          </button>
+          <button type="button" id="entry-yes" onClick={handleSave}>
+            Yes
+          </button>
+        </div>
+      </Modal>
     </form>
   );
 }

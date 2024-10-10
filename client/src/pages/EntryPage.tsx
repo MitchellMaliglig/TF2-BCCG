@@ -1,5 +1,5 @@
-import React, { FormEvent, useState } from 'react';
-//import { saveEntry } from '../lib/data';
+import React, { useState } from 'react';
+import { saveEntry } from '../lib/data';
 import { useNavigate } from 'react-router-dom';
 import { EntryForm } from '../components/EntryForm';
 
@@ -29,16 +29,14 @@ export function EntryPage({ pageType }: entryPageProps) {
     difficulties: ['easy', 'normal', 'hard', 'expert'],
   };
 
-  async function handleSave(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    console.log(commands);
-    // const newEntry = {
-    //   title: 'title',
-    //   description: 'description',
-    //   commands: 'tf_bot_add 1 medic red expert;',
-    // };
+  async function handleSave(Entryitle: string, entryDescription: string) {
+    const newEntry = {
+      title: Entryitle,
+      description: entryDescription,
+      commands: commands.map((c) => c + ';').join(''),
+    };
     try {
-      //await saveEntry(newEntry);
+      await saveEntry(newEntry);
     } catch (err) {
       console.error(err);
     } finally {
@@ -55,7 +53,12 @@ export function EntryPage({ pageType }: entryPageProps) {
 
   function handleAddCommand(event: React.MouseEvent<HTMLButtonElement>) {
     const formData = new FormData(event.currentTarget.form!);
-    const commandData = Object.fromEntries(formData);
+    const commandData = {
+      count: formData.get('count')?.toString(),
+      class: formData.get('class')?.toString(),
+      team: formData.get('team')?.toString(),
+      difficulty: formData.get('difficulty')?.toString(),
+    };
     const command = `tf_bot_add ${commandData.count} ${commandData.class} ${commandData.team} ${commandData.difficulty}`;
     setCommands((c) => [...c, command]);
   }

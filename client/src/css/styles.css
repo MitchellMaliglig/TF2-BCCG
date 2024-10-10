@@ -42,6 +42,22 @@ button,
   color: black;
 }
 
+#no-entries,
+#no-title,
+#no-description {
+  color: red;
+}
+
+#entry-yes {
+  border-color: green;
+  background-color: green;
+}
+
+#entry-no {
+  border-color: red;
+  background-color: red;
+}
+
 button {
   border-color: rgb(255, 127, 39);
   padding: 1rem;
