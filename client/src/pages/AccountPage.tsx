@@ -3,6 +3,9 @@ import { Auth } from '../lib/data';
 import { useUser } from '../components/useUser';
 import { useNavigate } from 'react-router-dom';
 
+/*
+  pageType can be "Log In" or "Sign Up"
+*/
 type accountPageProps = {
   pageType: string;
 };
@@ -33,7 +36,8 @@ export function AccountPage({ pageType }: accountPageProps) {
             sign up bug where userId can still increment when
             attempting to sign up using an existing username
           */
-          throw new Error('User already exists');
+          // throw new Error('User already exists');
+          throw new Error('Sign up error');
         }
         alert('Successfully registered!');
       }

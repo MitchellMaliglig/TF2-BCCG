@@ -8,12 +8,15 @@ export type Auth = {
   token: string;
 };
 
-export type Entry = {
-  entryId: number;
-  userId: number;
+export type NewEntry = {
   title: string;
   description: string;
   commands: string;
+};
+
+export type Entry = NewEntry & {
+  entryId: number;
+  userId: number;
 };
 
 const authKey = 'tf2-bccg.pizza.auth';
@@ -42,4 +45,17 @@ export async function readEntries(): Promise<Entry[]> {
   });
   if (!res.ok) throw new Error(`fetch error: ${res.status}`);
   return (await res.json()) as Entry[];
+}
+
+export async function saveEntry(newEntry: NewEntry): Promise<Entry> {
+  const res = await fetch('/api/entries', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${readToken()}`,
+    },
+    body: JSON.stringify(newEntry),
+  });
+  if (!res.ok) throw new Error(`fetch error: ${res.status}`);
+  return (await res.json()) as Entry;
 }

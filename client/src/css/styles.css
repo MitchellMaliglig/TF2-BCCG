@@ -24,6 +24,8 @@ button {
   list-style: none;
   border-radius: 0.5rem;
   padding: 1rem;
+  display: flex;
+  flex-direction: column;
 }
 
 h1,
@@ -42,6 +44,22 @@ button,
   color: black;
 }
 
+#no-entries,
+#no-title,
+#no-description {
+  color: red;
+}
+
+#entry-yes {
+  border-color: green;
+  background-color: green;
+}
+
+#entry-no {
+  border-color: red;
+  background-color: red;
+}
+
 button {
   border-color: rgb(255, 127, 39);
   padding: 1rem;
@@ -54,10 +72,16 @@ button {
   display: inline;
 }
 
+.remove-entry {
+  font-size: 1.5rem;
+  float: right;
+}
+
 button:hover,
 nav > h2:hover,
 #dont-have-acc:hover,
-.icon:hover {
+.icon:hover,
+.remove-entry:hover {
   cursor: pointer;
 }
 
@@ -69,16 +93,24 @@ nav > h2:hover,
   border-radius: 0.5rem;
 }
 
-.tooltip {
+div[class$='tooltip'] {
   position: absolute;
   background-color: rgba(0, 0, 0, 0.7);
   color: white;
   padding: 0.25rem 0.5rem;
   border-radius: 0.5rem;
   font-size: 1rem;
+}
+
+.copy-tooltip {
   left: 90%;
 }
 
-.copy {
+.duplicate-tooltip {
+  top: 10%;
+}
+
+.copy,
+.add {
   position: relative;
 }

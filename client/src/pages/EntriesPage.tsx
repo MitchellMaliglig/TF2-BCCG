@@ -2,11 +2,13 @@ import { useEffect, useState } from 'react';
 import { Entry, readEntries } from '../lib/data';
 import { useUser } from '../components/useUser';
 import { EntryCard } from '../components/EntryCard';
+import { useNavigate } from 'react-router-dom';
 
 export function EntriesPage() {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useUser();
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchEntries() {
@@ -14,18 +16,27 @@ export function EntriesPage() {
         setEntries(await readEntries());
       } catch (err) {
         throw new Error(`Error: ${err}`);
-      } finally {
-        setIsLoading(false);
       }
     }
     if (user) fetchEntries();
-    else setIsLoading(false);
+    setIsLoading(false);
   }, [user]);
 
   return (
     <>
       <h2 className="page-heading">Entries Page</h2>
-      <button id="entry-button">New</button>
+      {/*
+        the "/" in navigate() is required to
+        navigate to "/create-entry" instead of
+        "/entries/create-entry"
+      */}
+      <button
+        id="entry-button"
+        onClick={() => {
+          if (user) navigate('/create-entry');
+        }}>
+        New
+      </button>
       {isLoading && <p>Loading...</p>}
       {!isLoading && (
         <>
