@@ -36,7 +36,7 @@ export function EntryCard({ entry }: entryCardProps) {
   return (
     <li className="entry-card row">
       <div className="column-half">
-        <TeamBoxes commands={commands} />
+        <TeamBoxes commands={commands} isEditing={false} />
       </div>
       <div className="column-half">
         <h3 className="text-box">
@@ -49,7 +49,7 @@ export function EntryCard({ entry }: entryCardProps) {
               ref={toolTipRef}
             />
             {showToolTip && (
-              <div ref={toolTipRef} className="tooltip">
+              <div ref={toolTipRef} className="copy-tooltip">
                 Copied!
               </div>
             )}

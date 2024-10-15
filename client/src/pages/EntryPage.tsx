@@ -13,6 +13,7 @@ type entryPageProps = {
 export function EntryPage({ pageType }: entryPageProps) {
   const navigate = useNavigate();
   const [commands, setCommands] = useState([] as string[]);
+  const [showToolTip, setShowToolTip] = useState(false);
   const entryOptions = {
     classes: [
       'scout',
@@ -60,7 +61,16 @@ export function EntryPage({ pageType }: entryPageProps) {
       difficulty: formData.get('difficulty')?.toString(),
     };
     const command = `tf_bot_add ${commandData.count} ${commandData.class} ${commandData.team} ${commandData.difficulty}`;
-    setCommands((c) => [...c, command]);
+    if (!commands.includes(command)) {
+      setCommands((c) => [...c, command]);
+    } else {
+      setShowToolTip(true);
+      setTimeout(() => setShowToolTip(false), 2000);
+    }
+  }
+
+  function handleRemoveCommand(command: string) {
+    setCommands((cmds) => cmds.filter((c) => c !== command));
   }
 
   return (
@@ -69,8 +79,10 @@ export function EntryPage({ pageType }: entryPageProps) {
       <EntryForm
         onSave={handleSave}
         onAddCommand={handleAddCommand}
+        onRemoveCommand={handleRemoveCommand}
         entryOptions={entryOptions}
         commands={commands}
+        shouldShowTooltip={showToolTip}
       />
     </>
   );

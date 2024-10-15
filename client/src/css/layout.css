@@ -60,6 +60,11 @@ ul {
   #entry-form > ul {
     width: 50%;
   }
+
+  .duplicate {
+    left: 37%;
+    top: 45%;
+  }
 }
 
 /* yes */

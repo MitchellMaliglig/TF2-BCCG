@@ -1,23 +1,27 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { TeamBoxes } from './TeamBoxes';
 import { Modal } from './Modal';
 
 type entryFormProps = {
   onSave: (entryTitle: string, entryDescription: string) => void;
   onAddCommand: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  onRemoveCommand: (command: string) => void;
   entryOptions: {
     classes: string[];
     teams: string[];
     difficulties: string[];
   };
   commands: string[];
+  shouldShowTooltip: boolean;
 };
 
 export function EntryForm({
   onSave,
   onAddCommand,
+  onRemoveCommand,
   entryOptions,
   commands,
+  shouldShowTooltip,
 }: entryFormProps) {
   const [isOpen, setOpen] = useState(false);
   const [isCommandsEmpty, setCommandsEmpty] = useState(false);
@@ -25,6 +29,7 @@ export function EntryForm({
   const [isDescriptionBlank, setDescriptionBlank] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const toolTipRef = useRef(null);
 
   function handleOpen() {
     setCommandsEmpty(false);
@@ -94,10 +99,21 @@ export function EntryForm({
           </select>
         </label>
       </div>
-      <button type="button" onClick={onAddCommand}>
-        Add command
-      </button>
-      <TeamBoxes commands={commands} />
+      <div className="add">
+        <button type="button" onClick={onAddCommand} ref={toolTipRef}>
+          Add command
+        </button>
+        {shouldShowTooltip && (
+          <div ref={toolTipRef} className="duplicate-tooltip">
+            Can't add duplicate command!
+          </div>
+        )}
+      </div>
+      <TeamBoxes
+        commands={commands}
+        isEditing={true}
+        onRemoveCommand={onRemoveCommand}
+      />
       <button type="button" onClick={handleOpen}>
         Save
       </button>
