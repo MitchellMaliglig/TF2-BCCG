@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { readEntry, saveEntry } from '../lib/data';
+import { readEntry, saveEntry, updateEntry } from '../lib/data';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { EntryForm } from '../components/EntryForm';
 
@@ -57,7 +57,11 @@ export function EntryPage({ pageType }: entryPageProps) {
       commands: commands.map((c) => c + ';').join(''),
     };
     try {
-      await saveEntry(newEntry);
+      if (pageType === 'Create Entry') {
+        await saveEntry(newEntry);
+      } else if (pageType === 'Modify Entry') {
+        await updateEntry(newEntry, Number(entryId));
+      }
     } catch (err) {
       console.error(err);
     } finally {

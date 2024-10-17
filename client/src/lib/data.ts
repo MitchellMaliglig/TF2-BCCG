@@ -70,3 +70,20 @@ export async function saveEntry(newEntry: NewEntry): Promise<Entry> {
   if (!res.ok) throw new Error(`fetch error: ${res.status}`);
   return (await res.json()) as Entry;
 }
+
+export async function updateEntry(
+  entry: NewEntry,
+  entryId: number
+): Promise<Entry> {
+  const req = {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${readToken()}`,
+    },
+    body: JSON.stringify(entry),
+  };
+  const res = await fetch(`/api/entries/${entryId}`, req);
+  if (!res.ok) throw new Error(`fetch Error ${res.status}`);
+  return (await res.json()) as Entry;
+}
