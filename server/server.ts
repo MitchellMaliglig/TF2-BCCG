@@ -117,6 +117,34 @@ app.post('/api/entries', authMiddleware, async (req, res, next) => {
   }
 });
 
+app.put('/api/entries/:entryId', authMiddleware, async (req, res, next) => {
+  try {
+    const entryId = Number(req.params.entryId);
+    if (!Number.isInteger(entryId) || entryId < 1) {
+      throw new ClientError(400, 'entryId must be a positive integer');
+    }
+    const { title, description, commands } = req.body;
+    const sql = `
+      UPDATE "entries"
+      SET "updatedAt" = now(),
+          "title" = $1,
+          "description" = $2,
+          "commands" = $3
+      WHERE "entryId" = $4 AND "userId" = $5
+      RETURNING *;
+    `;
+    const params = [title, description, commands, entryId, req.user?.userId];
+    const result = await db.query(sql, params);
+    const [entry] = result.rows;
+    if (!entry) {
+      throw new ClientError(404, `cannot find entry with entryId ${entryId}`);
+    }
+    res.json(entry);
+  } catch (err) {
+    next(err);
+  }
+});
+
 /*
  * Handles paths that aren't handled by any other route handler.
  * It responds with `index.html` to support page refreshes with React Router.
