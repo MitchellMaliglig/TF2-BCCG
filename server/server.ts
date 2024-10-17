@@ -32,10 +32,6 @@ app.use(express.static(reactStaticDir));
 app.use(express.static(uploadsStaticDir));
 app.use(express.json());
 
-app.get('/api/hello', (req, res) => {
-  res.json({ message: 'Hello, World!' });
-});
-
 app.post('/api/auth/sign-up', async (req, res, next) => {
   try {
     const { username, password } = req.body;
@@ -92,7 +88,30 @@ app.get('/api/entries', authMiddleware, async (req, res, next) => {
       WHERE "userId" = $1;
     `;
     const result = await db.query(sql, [req.user?.userId]);
-    res.json(result.rows);
+    res.status(200).json(result.rows);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.get('/api/entries/:entryId', authMiddleware, async (req, res, next) => {
+  try {
+    const entryId = Number(req.params.entryId);
+    if (!Number.isInteger(entryId) || entryId < 1) {
+      throw new ClientError(400, 'entryId must be a positive integer');
+    }
+    const sql = `
+      SELECT * FROM "entries"
+      WHERE "entryId" = $1 AND "userId" = $2;
+    `;
+    const params = [entryId, req.user?.userId];
+    const result = await db.query(sql, params);
+    const [entry] = result.rows;
+    if (entry) {
+      res.status(200).json(entry);
+    } else {
+      throw new ClientError(404, `cannot find entry with entryId ${entryId}`);
+    }
   } catch (err) {
     next(err);
   }
@@ -139,7 +158,7 @@ app.put('/api/entries/:entryId', authMiddleware, async (req, res, next) => {
     if (!entry) {
       throw new ClientError(404, `cannot find entry with entryId ${entryId}`);
     }
-    res.json(entry);
+    res.status(200).json(entry);
   } catch (err) {
     next(err);
   }
