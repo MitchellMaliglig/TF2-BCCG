@@ -145,6 +145,30 @@ app.put('/api/entries/:entryId', authMiddleware, async (req, res, next) => {
   }
 });
 
+app.delete('/api/entries/:entryId', authMiddleware, async (req, res, next) => {
+  try {
+    const entryId = Number(req.params.entryId);
+    if (!Number.isInteger(entryId) || entryId < 1) {
+      throw new ClientError(400, 'entryId must be a positive integer');
+    }
+    const sql = `
+      DELETE FROM "entries"
+      WHERE "entryId" = $1 AND "userId" = $2
+      RETURNING *;
+    `;
+    const params = [entryId, req.user?.userId];
+    const result = await db.query(sql, params);
+    const [entry] = result.rows;
+    if (entry) {
+      res.sendStatus(204);
+    } else {
+      throw new ClientError(404, `entry ${entryId} not found`);
+    }
+  } catch (err) {
+    next(err);
+  }
+});
+
 /*
  * Handles paths that aren't handled by any other route handler.
  * It responds with `index.html` to support page refreshes with React Router.
