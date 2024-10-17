@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { TeamBoxes } from './TeamBoxes';
 import { Modal } from './Modal';
 
@@ -13,6 +13,8 @@ type entryFormProps = {
   };
   commands: string[];
   shouldShowTooltip: boolean;
+  title: string;
+  description: string;
 };
 
 export function EntryForm({
@@ -22,13 +24,15 @@ export function EntryForm({
   entryOptions,
   commands,
   shouldShowTooltip,
+  title,
+  description,
 }: entryFormProps) {
   const [isOpen, setOpen] = useState(false);
   const [isCommandsEmpty, setCommandsEmpty] = useState(false);
   const [isTitleBlank, setTitleBlank] = useState(false);
   const [isDescriptionBlank, setDescriptionBlank] = useState(false);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+  const [formTitle, setFormTitle] = useState(title);
+  const [formDescription, setFormDescription] = useState(description);
   const toolTipRef = useRef(null);
 
   function handleOpen() {
@@ -43,15 +47,20 @@ export function EntryForm({
   function handleSave() {
     if (commands.length === 0) {
       setCommandsEmpty(true);
-    } else if (title.length === 0) {
+    } else if (formTitle.length === 0) {
       setTitleBlank(true);
-    } else if (description.length === 0) {
+    } else if (formDescription.length === 0) {
       setTitleBlank(false);
       setDescriptionBlank(true);
     } else {
-      onSave(title, description);
+      onSave(formTitle, formDescription);
     }
   }
+
+  useEffect(() => {
+    setFormTitle(title);
+    setFormDescription(description);
+  }, [title, description]);
 
   return (
     <form id="entry-form">
@@ -125,8 +134,8 @@ export function EntryForm({
             name="title"
             id="title"
             required
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            value={formTitle}
+            onChange={(e) => setFormTitle(e.target.value)}
           />
         </div>
         <div className="row">
@@ -135,8 +144,8 @@ export function EntryForm({
             name="description"
             id="description"
             required
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            value={formDescription}
+            onChange={(e) => setFormDescription(e.target.value)}
           />
         </div>
         {isCommandsEmpty && (

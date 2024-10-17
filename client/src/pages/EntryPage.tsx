@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { readEntry, saveEntry } from '../lib/data';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { EntryForm } from '../components/EntryForm';
 
 /*
@@ -14,7 +14,10 @@ export function EntryPage({ pageType }: entryPageProps) {
   const navigate = useNavigate();
   const [commands, setCommands] = useState([] as string[]);
   const [showToolTip, setShowToolTip] = useState(false);
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
   const { entryId } = useParams();
+  const location = useLocation();
   const entryOptions = {
     classes: [
       'scout',
@@ -37,6 +40,8 @@ export function EntryPage({ pageType }: entryPageProps) {
         try {
           const entry = await readEntry(Number(entryId));
           setCommands(entry.commands.split(';').filter((c) => c.length > 0));
+          setTitle(location.state.title);
+          setDescription(location.state.description);
         } catch (err) {
           console.error(err);
         }
@@ -98,6 +103,8 @@ export function EntryPage({ pageType }: entryPageProps) {
         entryOptions={entryOptions}
         commands={commands}
         shouldShowTooltip={showToolTip}
+        title={title}
+        description={description}
       />
     </>
   );

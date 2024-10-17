@@ -57,7 +57,11 @@ export function EntryCard({ entry }: entryCardProps) {
           <FontAwesomeIcon
             icon={faPencilAlt}
             className="icon pencil"
-            onClick={() => navigate(`/entries/${entry.entryId}`)}
+            onClick={() =>
+              navigate(`/entries/${entry.entryId}`, {
+                state: { title: entry.title, description: entry.description },
+              })
+            }
           />
         </h3>
         <p className="text-box">{entry.description}</p>
