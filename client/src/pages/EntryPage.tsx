@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { saveEntry } from '../lib/data';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { readEntry, saveEntry } from '../lib/data';
+import { useNavigate, useParams } from 'react-router-dom';
 import { EntryForm } from '../components/EntryForm';
 
 /*
-  pageType can be "Create Entry" or "???"
+  pageType can be "Create Entry" or "Modify Entry"
 */
 type entryPageProps = {
   pageType: string;
@@ -14,6 +14,7 @@ export function EntryPage({ pageType }: entryPageProps) {
   const navigate = useNavigate();
   const [commands, setCommands] = useState([] as string[]);
   const [showToolTip, setShowToolTip] = useState(false);
+  const { entryId } = useParams();
   const entryOptions = {
     classes: [
       'scout',
@@ -30,9 +31,23 @@ export function EntryPage({ pageType }: entryPageProps) {
     difficulties: ['easy', 'normal', 'hard', 'expert'],
   };
 
-  async function handleSave(Entryitle: string, entryDescription: string) {
+  useEffect(() => {
+    async function fetchEntry() {
+      if (pageType === 'Modify Entry') {
+        try {
+          const entry = await readEntry(Number(entryId));
+          setCommands(entry.commands.split(';').filter((c) => c.length > 0));
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    }
+    fetchEntry();
+  }, []);
+
+  async function handleSave(entryTitle: string, entryDescription: string) {
     const newEntry = {
-      title: Entryitle,
+      title: entryTitle,
       description: entryDescription,
       commands: commands.map((c) => c + ';').join(''),
     };

@@ -16,6 +16,10 @@ export default function App() {
           path="create-entry"
           element={<EntryPage pageType={'Create Entry'} />}
         />
+        <Route
+          path="/entries/:entryId"
+          element={<EntryPage pageType={'Modify Entry'} />}
+        />
         <Route path="log-in" element={<AccountPage pageType={'Log In'} />} />
         <Route path="sign-up" element={<AccountPage pageType={'Sign Up'} />} />
         <Route path="*" element={<NotFoundPage />} />

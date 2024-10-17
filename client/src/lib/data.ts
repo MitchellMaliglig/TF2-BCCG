@@ -47,6 +47,17 @@ export async function readEntries(): Promise<Entry[]> {
   return (await res.json()) as Entry[];
 }
 
+export async function readEntry(entryId: number): Promise<Entry> {
+  const res = await fetch(`/api/entries/${entryId}`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${readToken()}`,
+    },
+  });
+  if (!res.ok) throw new Error(`fetch error: ${res.status}`);
+  return (await res.json()) as Entry;
+}
+
 export async function saveEntry(newEntry: NewEntry): Promise<Entry> {
   const res = await fetch('/api/entries', {
     method: 'POST',
