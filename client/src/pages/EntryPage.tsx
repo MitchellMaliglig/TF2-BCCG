@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { readEntry, saveEntry, updateEntry } from '../lib/data';
+import { readEntry, removeEntry, saveEntry, updateEntry } from '../lib/data';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { EntryForm } from '../components/EntryForm';
 
@@ -97,6 +97,11 @@ export function EntryPage({ pageType }: entryPageProps) {
     setCommands((cmds) => cmds.filter((c) => c !== command));
   }
 
+  function handleDelete() {
+    removeEntry(Number(entryId));
+    navigate('/entries');
+  }
+
   return (
     <>
       <h2 className="page-heading">{pageType} Page</h2>
@@ -104,11 +109,13 @@ export function EntryPage({ pageType }: entryPageProps) {
         onSave={handleSave}
         onAddCommand={handleAddCommand}
         onRemoveCommand={handleRemoveCommand}
+        onDelete={handleDelete}
         entryOptions={entryOptions}
         commands={commands}
         shouldShowTooltip={showToolTip}
         title={title}
         description={description}
+        pageType={pageType}
       />
     </>
   );

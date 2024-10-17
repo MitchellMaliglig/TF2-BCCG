@@ -87,3 +87,14 @@ export async function updateEntry(
   if (!res.ok) throw new Error(`fetch Error ${res.status}`);
   return (await res.json()) as Entry;
 }
+
+export async function removeEntry(entryId: number): Promise<void> {
+  const req = {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${readToken()}`,
+    },
+  };
+  const res = await fetch(`/api/entries/${entryId}`, req);
+  if (!res.ok) throw new Error(`fetch Error ${res.status}`);
+}

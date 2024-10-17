@@ -6,6 +6,7 @@ type entryFormProps = {
   onSave: (entryTitle: string, entryDescription: string) => void;
   onAddCommand: (event: React.MouseEvent<HTMLButtonElement>) => void;
   onRemoveCommand: (command: string) => void;
+  onDelete: () => void;
   entryOptions: {
     classes: string[];
     teams: string[];
@@ -15,19 +16,23 @@ type entryFormProps = {
   shouldShowTooltip: boolean;
   title: string;
   description: string;
+  pageType: string;
 };
 
 export function EntryForm({
   onSave,
   onAddCommand,
   onRemoveCommand,
+  onDelete,
   entryOptions,
   commands,
   shouldShowTooltip,
   title,
   description,
+  pageType,
 }: entryFormProps) {
-  const [isOpen, setOpen] = useState(false);
+  const [isOpenSave, setOpenSave] = useState(false);
+  const [isOpenDelete, setOpenDelete] = useState(false);
   const [isCommandsEmpty, setCommandsEmpty] = useState(false);
   const [isTitleBlank, setTitleBlank] = useState(false);
   const [isDescriptionBlank, setDescriptionBlank] = useState(false);
@@ -35,13 +40,21 @@ export function EntryForm({
   const [formDescription, setFormDescription] = useState(description);
   const toolTipRef = useRef(null);
 
-  function handleOpen() {
+  function handleOpenSave() {
     setCommandsEmpty(false);
-    setOpen(true);
+    setOpenSave(true);
   }
 
-  function handleCancel() {
-    setOpen(false);
+  function handleCancelSave() {
+    setOpenSave(false);
+  }
+
+  function handleOpenDelete() {
+    setOpenDelete(true);
+  }
+
+  function handleCancelDelete() {
+    setOpenDelete(false);
   }
 
   function handleSave() {
@@ -123,10 +136,28 @@ export function EntryForm({
         isEditing={true}
         onRemoveCommand={onRemoveCommand}
       />
-      <button type="button" onClick={handleOpen}>
-        Save
-      </button>
-      <Modal isOpen={isOpen} onClose={handleCancel}>
+      <div className="row" id="delete-save">
+        {pageType === 'Modify Entry' && (
+          <a onClick={handleOpenDelete} id="delete-entry">
+            Delete
+          </a>
+        )}
+        <button type="button" onClick={handleOpenSave} id="save-button">
+          Save
+        </button>
+      </div>
+      <Modal isOpen={isOpenDelete} onClose={handleCancelDelete}>
+        <h3>Would you like to delete?</h3>
+        <div className="row">
+          <button type="button" id="delete-no" onClick={handleCancelDelete}>
+            No
+          </button>
+          <button type="button" id="delete-yes" onClick={onDelete}>
+            Yes
+          </button>
+        </div>
+      </Modal>
+      <Modal isOpen={isOpenSave} onClose={handleCancelSave}>
         <h3>Would you like to save?</h3>
         <div className="row">
           <label htmlFor="title">Title</label>
@@ -156,7 +187,7 @@ export function EntryForm({
           <p id="no-description">There's no description, lad!</p>
         )}
         <div className="row">
-          <button type="button" id="entry-no" onClick={handleCancel}>
+          <button type="button" id="entry-no" onClick={handleCancelSave}>
             No
           </button>
           <button type="button" id="entry-yes" onClick={handleSave}>
