@@ -20,7 +20,8 @@ export function EntryCard({ entry }: entryCardProps) {
       'sv_cheats 1;\n' +
       'tf_bot_keep_class_after_death 1;\n' +
       'tf_bot_reevaluate_class_in_spawnroom 0;\n' +
-      'mp_teams_unbalance_limit 0;\n';
+      'mp_teams_unbalance_limit 0;\n' +
+      'tf_bot_kick all;\n';
     try {
       for (let i = 0; i < commands.length; i++) {
         text += commands[i] + ';\n';

@@ -94,7 +94,12 @@ export function EntryPage({ pageType }: entryPageProps) {
   }
 
   function handleRemoveCommand(command: string) {
-    setCommands((cmds) => cmds.filter((c) => c !== command));
+    const index = commands.indexOf(command);
+    if (index !== -1) {
+      const newCommands = [...commands];
+      newCommands.splice(index, 1);
+      setCommands(newCommands);
+    }
   }
 
   function handleDelete() {
