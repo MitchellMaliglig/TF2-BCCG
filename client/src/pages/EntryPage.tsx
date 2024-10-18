@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { saveEntry } from '../lib/data';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { readEntry, removeEntry, saveEntry, updateEntry } from '../lib/data';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { EntryForm } from '../components/EntryForm';
 
 /*
-  pageType can be "Create Entry" or "???"
+  pageType can be "Create Entry" or "Modify Entry"
 */
 type entryPageProps = {
   pageType: string;
@@ -14,6 +14,10 @@ export function EntryPage({ pageType }: entryPageProps) {
   const navigate = useNavigate();
   const [commands, setCommands] = useState([] as string[]);
   const [showToolTip, setShowToolTip] = useState(false);
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const { entryId } = useParams();
+  const location = useLocation();
   const entryOptions = {
     classes: [
       'scout',
@@ -30,14 +34,34 @@ export function EntryPage({ pageType }: entryPageProps) {
     difficulties: ['easy', 'normal', 'hard', 'expert'],
   };
 
-  async function handleSave(Entryitle: string, entryDescription: string) {
+  useEffect(() => {
+    async function fetchEntry() {
+      if (pageType === 'Modify Entry') {
+        try {
+          const entry = await readEntry(Number(entryId));
+          setCommands(entry.commands.split(';').filter((c) => c.length > 0));
+          setTitle(location.state.title);
+          setDescription(location.state.description);
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    }
+    fetchEntry();
+  }, []);
+
+  async function handleSave(entryTitle: string, entryDescription: string) {
     const newEntry = {
-      title: Entryitle,
+      title: entryTitle,
       description: entryDescription,
       commands: commands.map((c) => c + ';').join(''),
     };
     try {
-      await saveEntry(newEntry);
+      if (pageType === 'Create Entry') {
+        await saveEntry(newEntry);
+      } else if (pageType === 'Modify Entry') {
+        await updateEntry(newEntry, Number(entryId));
+      }
     } catch (err) {
       console.error(err);
     } finally {
@@ -70,7 +94,17 @@ export function EntryPage({ pageType }: entryPageProps) {
   }
 
   function handleRemoveCommand(command: string) {
-    setCommands((cmds) => cmds.filter((c) => c !== command));
+    const index = commands.indexOf(command);
+    if (index !== -1) {
+      const newCommands = [...commands];
+      newCommands.splice(index, 1);
+      setCommands(newCommands);
+    }
+  }
+
+  function handleDelete() {
+    removeEntry(Number(entryId));
+    navigate('/entries');
   }
 
   return (
@@ -80,9 +114,13 @@ export function EntryPage({ pageType }: entryPageProps) {
         onSave={handleSave}
         onAddCommand={handleAddCommand}
         onRemoveCommand={handleRemoveCommand}
+        onDelete={handleDelete}
         entryOptions={entryOptions}
         commands={commands}
         shouldShowTooltip={showToolTip}
+        title={title}
+        description={description}
+        pageType={pageType}
       />
     </>
   );

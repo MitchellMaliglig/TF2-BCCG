@@ -147,3 +147,11 @@ button {
 dialog > div.row > button {
   width: 35%;
 }
+
+#delete-save {
+  align-items: center;
+}
+
+#save-button {
+  margin-left: auto;
+}

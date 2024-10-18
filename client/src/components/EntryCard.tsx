@@ -3,6 +3,7 @@ import { faPencilAlt, faCopy } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRef, useState } from 'react';
 import { TeamBoxes } from './TeamBoxes';
+import { useNavigate } from 'react-router-dom';
 
 type entryCardProps = {
   entry: Entry;
@@ -11,18 +12,18 @@ type entryCardProps = {
 export function EntryCard({ entry }: entryCardProps) {
   const [showToolTip, setShowToolTip] = useState(false);
   const toolTipRef = useRef(null);
-
-  // the last value of commands[] is an empty string ""
-  const commands = entry.commands.split(';');
+  const navigate = useNavigate();
+  const commands = entry.commands.split(';').filter((c) => c.length > 0);
 
   async function handleCopy() {
     let text =
       'sv_cheats 1;\n' +
       'tf_bot_keep_class_after_death 1;\n' +
       'tf_bot_reevaluate_class_in_spawnroom 0;\n' +
-      'mp_teams_unbalance_limit 0;\n';
+      'mp_teams_unbalance_limit 0;\n' +
+      'tf_bot_kick all;\n';
     try {
-      for (let i = 0; i < commands.length - 1; i++) {
+      for (let i = 0; i < commands.length; i++) {
         text += commands[i] + ';\n';
       }
       await navigator.clipboard.writeText(text);
@@ -57,7 +58,11 @@ export function EntryCard({ entry }: entryCardProps) {
           <FontAwesomeIcon
             icon={faPencilAlt}
             className="icon pencil"
-            onClick={() => console.log('pencil')}
+            onClick={() =>
+              navigate(`/entries/${entry.entryId}`, {
+                state: { title: entry.title, description: entry.description },
+              })
+            }
           />
         </h3>
         <p className="text-box">{entry.description}</p>

@@ -47,6 +47,17 @@ export async function readEntries(): Promise<Entry[]> {
   return (await res.json()) as Entry[];
 }
 
+export async function readEntry(entryId: number): Promise<Entry> {
+  const res = await fetch(`/api/entries/${entryId}`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${readToken()}`,
+    },
+  });
+  if (!res.ok) throw new Error(`fetch error: ${res.status}`);
+  return (await res.json()) as Entry;
+}
+
 export async function saveEntry(newEntry: NewEntry): Promise<Entry> {
   const res = await fetch('/api/entries', {
     method: 'POST',
@@ -58,4 +69,32 @@ export async function saveEntry(newEntry: NewEntry): Promise<Entry> {
   });
   if (!res.ok) throw new Error(`fetch error: ${res.status}`);
   return (await res.json()) as Entry;
+}
+
+export async function updateEntry(
+  entry: NewEntry,
+  entryId: number
+): Promise<Entry> {
+  const req = {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${readToken()}`,
+    },
+    body: JSON.stringify(entry),
+  };
+  const res = await fetch(`/api/entries/${entryId}`, req);
+  if (!res.ok) throw new Error(`fetch Error ${res.status}`);
+  return (await res.json()) as Entry;
+}
+
+export async function removeEntry(entryId: number): Promise<void> {
+  const req = {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${readToken()}`,
+    },
+  };
+  const res = await fetch(`/api/entries/${entryId}`, req);
+  if (!res.ok) throw new Error(`fetch Error ${res.status}`);
 }
