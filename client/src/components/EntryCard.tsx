@@ -1,9 +1,10 @@
 import { Entry } from '../lib/data';
 import { faPencilAlt, faCopy } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { TeamBoxes } from './TeamBoxes';
 import { useNavigate } from 'react-router-dom';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 type entryCardProps = {
   entry: Entry;
@@ -11,27 +12,20 @@ type entryCardProps = {
 
 export function EntryCard({ entry }: entryCardProps) {
   const [showToolTip, setShowToolTip] = useState(false);
-  const toolTipRef = useRef(null);
   const navigate = useNavigate();
   const commands = entry.commands.split(';').filter((c) => c.length > 0);
 
-  async function handleCopy() {
+  function handleCopy() {
     let text =
       'sv_cheats 1;\n' +
       'tf_bot_keep_class_after_death 1;\n' +
       'tf_bot_reevaluate_class_in_spawnroom 0;\n' +
       'mp_teams_unbalance_limit 0;\n' +
       'tf_bot_kick all;\n';
-    try {
-      for (let i = 0; i < commands.length; i++) {
-        text += commands[i] + ';\n';
-      }
-      await navigator.clipboard.writeText(text);
-      setShowToolTip(true);
-      setTimeout(() => setShowToolTip(false), 2000);
-    } catch (err) {
-      console.error(err);
+    for (let i = 0; i < commands.length; i++) {
+      text += commands[i] + ';\n';
     }
+    return text;
   }
 
   return (
@@ -43,17 +37,15 @@ export function EntryCard({ entry }: entryCardProps) {
         <h3 className="text-box">
           {entry.title}
           <div className="copy">
-            <FontAwesomeIcon
-              icon={faCopy}
-              className="icon"
-              onClick={handleCopy}
-              ref={toolTipRef}
-            />
-            {showToolTip && (
-              <div ref={toolTipRef} className="copy-tooltip">
-                Copied!
-              </div>
-            )}
+            <CopyToClipboard
+              text={handleCopy()}
+              onCopy={() => {
+                setShowToolTip(true);
+                setTimeout(() => setShowToolTip(false), 2000);
+              }}>
+              <FontAwesomeIcon icon={faCopy} className="icon" />
+            </CopyToClipboard>
+            {showToolTip && <div className="copy-tooltip">Copied!</div>}
           </div>
           <FontAwesomeIcon
             icon={faPencilAlt}
