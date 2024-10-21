@@ -11,6 +11,6 @@ Team Fortress 2 - Bot Console Command Generator (TF2-BCCG) is an interactive web
 ## User can create an entry
 ![pizza](https://github.com/user-attachments/assets/0616b1b4-85e9-41c3-af8d-d8424345e5b7)
 
-### User can view their entries
+## User can view their entries
 ![pizza](https://github.com/user-attachments/assets/bd843c73-2bb2-4047-9075-0a0ced59eabe)
 
