@@ -1,13 +1,6 @@
 # Team Fortress 2 - Bot Console Command Generator (TF2-BCCG)
 
-TF2-BCCG is an interactive web app desiged to aid TF2 players generate console commands that spawn in-game bots. Users can get started
-by simply making an account. Once the user has an account, then they can visit the entries page and start creating some entries. Based on 
-the input the user provides, a list of console commands will be generated, which can then be saved with an appropriate title and description.
-After an entry has been saved, it will appear on the entries page alongside the other entries the user may have created. If the users wishes
-to modify or delete an entry, they can click on the pencil icon for the given entry they wish to modify or delete, then proceed with said
-action. Similarly, if the user wishes to use the console commands associated with an entry they created, then they can click on the paper icon
-for the given entry, which will copy the appropriate commands onto the user's clipboard, after which they should visit the in-game console
-and paste the commands and hit enter to spawn bots in-game as specified.
+TF2-BCCG is an interactive web app designed to help TF2 players generate console commands for spawning in-game bots. Users can get started by creating an account. Once registered, they can visit the entries page to start creating entries. Based on the user input, a list of console commands is generated, which can be saved with an appropriate title and description. Saved entries will appear on the entries page alongside other user-created entries. To modify or delete an entry, users can click the pencil icon for the desired entry and proceed with their action. Similarly, to use the console commands associated with an entry, users can click the paper icon, which copies the commands to their clipboard. They can then paste the commands into the in-game console and hit enter to spawn the specified bots.
 
 ## Getting Started
 
