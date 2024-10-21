@@ -9,19 +9,19 @@ Team Fortress 2 - Bot Console Command Generator (TF2-BCCG) is an interactive web
 - User can update an entry
 - User can delete an entry
 
-## User can copy commands to their clipboard
+### User can copy commands to their clipboard
 ![pizza](https://github.com/user-attachments/assets/8a944f85-0e0a-4dcb-a9a5-0288a7b463da)
 
-## User can create an entry
+### User can create an entry
 ![pizza](https://github.com/user-attachments/assets/0616b1b4-85e9-41c3-af8d-d8424345e5b7)
 
-## User can view their entries
+### User can view their entries
 ![pizza](https://github.com/user-attachments/assets/b5d2d3d4-34a3-4249-ad7f-2592779f58ce)
 
-## User can update an entry
+### User can update an entry
 ![pizza](https://github.com/user-attachments/assets/645a7a30-c1df-4949-bb9b-efeb07a54e20)
 
-## User can delete an entry
+### User can delete an entry
 ![pizza](https://github.com/user-attachments/assets/df458ff5-ccde-4aa8-bf2e-f13be2e1efff)
 
 ## Technologies Used
